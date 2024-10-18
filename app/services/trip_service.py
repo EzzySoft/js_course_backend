@@ -14,7 +14,7 @@ from services.auth_service import get_user_from_session_id
 
 
 async def create(
-    trip_request: RequestTripScheme, session_id: str | None, db: AsyncSession
+        trip_request: RequestTripScheme, session_id: str | None, db: AsyncSession
 ) -> dict:
     user = await get_user_from_session_id(session_id=session_id, db=db)
 
@@ -44,7 +44,7 @@ async def get(trip_id: int, db: AsyncSession) -> TripResponseScheme:
 
 
 async def get_user_trips(
-    session_id: str | None, db: AsyncSession
+        session_id: str | None, db: AsyncSession
 ) -> List[TripResponseScheme]:
     user = await get_user_from_session_id(session_id=session_id, db=db)
 
@@ -61,6 +61,12 @@ async def get_user_trips(
     ]
 
     return response_trips
+
+
+async def get_all(db: AsyncSession) -> List[TripResponseScheme]:
+    trips = await trip_crud.get_al_trips(db)
+
+    return trips
 
 
 async def check_user(trip_id: int, session_id: str | None, db: AsyncSession):

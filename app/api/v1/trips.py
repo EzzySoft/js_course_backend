@@ -16,6 +16,12 @@ async def create(trip: RequestTripScheme, session_id: str | None = Cookie(defaul
         trip_service.create(trip, session_id, db)
     )
 
+@router.get("/")
+async def get_all(                 db: AsyncSession = Depends(database_helper.session_getter)):
+    return await ResponseService.response(
+        trip_service.get_all(db)
+    )
+
 
 @router.get("/{trip_id}")
 async def get(trip_id: int, db: AsyncSession = Depends(database_helper.session_getter)):

@@ -1,31 +1,13 @@
 services:
 
 
-#  kuda_react_app:
-#    env_file:
-#      - backend/.env
-#    build:
-#      context: frontend
-#    container_name: kuda_react_app
-#
-#    ports:
-#      - "3001:3001"
-#    environment:
-#      - API_URI=kuda_fastapi_app
-#
-#    depends_on:
-#      - kuda_database
-#      - kuda_redis
-#      - kuda_fastapi_app
-
-
   kuda_fastapi_app:
     build:
-      context: backend
+      context: .
       dockerfile: Dockerfile
     container_name: kuda_fastapi_app
     volumes:
-      - ./backend:/app
+      - .:/app
     ports:
       - "8000:8000"
     environment:
@@ -41,7 +23,7 @@ services:
 
   kuda_database:
     env_file:
-      - backend/.env
+      - app/.env
     image: postgres:latest
     restart: always
     container_name: kuda_database

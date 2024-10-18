@@ -50,6 +50,16 @@ async def get(trip_id: int, db: AsyncSession) -> TripScheme:
     return trip_scheme
 
 
+async def get_al_trips(db: AsyncSession) -> TripScheme:
+    trips = (
+        (await db.execute(select(Trip)))
+        .scalars()
+    )
+    trips_schemes = [TripScheme(**trip.__dict__) for trip in trips]
+
+    return trips_schemes
+
+
 async def delete(trip_delete: TripScheme, db: AsyncSession) -> None:
     query = select(Trip).filter(Trip.trip_id == trip_delete.trip_id)
 

@@ -10,7 +10,7 @@ ENV PATH="${PATH}:/root/.local/bin"
 
 WORKDIR /app
 
-COPY . /app
+COPY .. /app
 
 
 EXPOSE 8000
