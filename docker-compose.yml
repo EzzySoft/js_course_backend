@@ -1,0 +1,64 @@
+services:
+
+
+#  kuda_react_app:
+#    env_file:
+#      - backend/.env
+#    build:
+#      context: frontend
+#    container_name: kuda_react_app
+#
+#    ports:
+#      - "3001:3001"
+#    environment:
+#      - API_URI=kuda_fastapi_app
+#
+#    depends_on:
+#      - kuda_database
+#      - kuda_redis
+#      - kuda_fastapi_app
+
+
+  kuda_fastapi_app:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: kuda_fastapi_app
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_CONFIG__DATABASE__DB_USER=${APP_CONFIG__DATABASE__DB_USER}
+      - APP_CONFIG__DATABASE__DB_PASSWORD=${APP_CONFIG__DATABASE__DB_PASSWORD}
+      - APP_CONFIG__DATABASE__DB_NAME=${APP_CONFIG__DATABASE__DB_NAME}
+      - APP_CONFIG__DATABASE__DB_HOST=kuda_database
+      - APP_CONFIG__REDIS__HOST=kuda_redis
+    depends_on:
+      - kuda_database
+      - kuda_redis
+
+
+  kuda_database:
+    env_file:
+      - backend/.env
+    image: postgres:latest
+    restart: always
+    container_name: kuda_database
+    environment:
+      POSTGRES_USER: ${APP_CONFIG__DATABASE__DB_USER}
+      POSTGRES_PASSWORD: ${APP_CONFIG__DATABASE__DB_PASSWORD}
+      POSTGRES_DB: ${APP_CONFIG__DATABASE__DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - kuda_database:/var/lib/postgresql/data
+
+  kuda_redis:
+    image: redis:6
+    container_name: kuda_redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  kuda_database:
