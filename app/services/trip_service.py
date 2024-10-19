@@ -66,7 +66,17 @@ async def get_user_trips(
 async def get_all(db: AsyncSession) -> List[TripResponseScheme]:
     trips = await trip_crud.get_al_trips(db)
 
-    return trips
+    response_trips = [
+        TripResponseScheme(
+            **trip.__dict__,
+            creator=await auth_service.get_user(
+                await trip_user_crud.get_trip_creator_id(trip.trip_id, db), db
+            ),
+        )
+        for trip in trips
+    ]
+
+    return response_trips
 
 
 async def check_user(trip_id: int, session_id: str | None, db: AsyncSession):
