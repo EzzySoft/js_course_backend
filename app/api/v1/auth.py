@@ -24,8 +24,8 @@ async def login(user: CredentialsScheme, db: AsyncSession = Depends(database_hel
     )
 
 
-@router.get("/getusers/me/")
-async def get_info(session_id: str | None = Cookie(default=None),
+@router.get("/getusers/me/{session_id}")
+async def get_info(session_id: str | None ,
                    db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         auth_service.get_info(session_id, db)

@@ -9,8 +9,8 @@ from services.response_service import ResponseService
 router = APIRouter(tags=["Trips"])
 
 
-@router.post("/")
-async def create(trip: RequestTripScheme, session_id: str | None = Cookie(default=None),
+@router.post("/{session_id}")
+async def create(trip: RequestTripScheme, session_id: str | None,
                  db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         trip_service.create(trip, session_id, db)
@@ -38,8 +38,8 @@ async def delete(trip_id: int, session_id: str | None = Cookie(default=None),
     )
 
 
-@router.get("/get_user_trips/")
-async def get_user_trips(session_id: str | None = Cookie(default=None),
+@router.get("/get_user_trips/{session_id}")
+async def get_user_trips(session_id: str | None ,
                          db: AsyncSession = Depends(database_helper.session_getter)):
     return await ResponseService.response(
         trip_service.get_user_trips(session_id, db)
